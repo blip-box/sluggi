@@ -27,8 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs-shadcn==0.5.0
-
+          pip install mkdocs-shadcn==0.5.0 bottle==0.13.2 pymdown-extensions==10.14.3 pygments==2.19.1
+ 
       - name: Load site cache
         uses: actions/cache@v4
         with:
