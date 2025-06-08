@@ -1,0 +1,45 @@
+# Runs lint, formatting, tests, and uploads coverage on push/PR. Ensures code quality for both human and agent contributions.
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install project dependencies (all extras)
+        run: uv sync --all-extras
+
+      - name: Run pre-commit hooks
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+      - name: Lint with Ruff
+        run: uv run ruff check .
+
+      - name: Check formatting with Black
+        run: uv run black --check sluggi tests
+
+      - name: Run tests with coverage
+        run: uv run pytest --cov=sluggi --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}

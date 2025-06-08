@@ -1,0 +1,49 @@
+# Playground workflow for agents and humans to experiment, test, or self-heal code safely.
+# Issues/PRs labeled with 'playground' will trigger this workflow. Artifacts are auto-cleaned.
+# This is a safe, isolated automation zone for future-thinking, agent-driven open source.
+
+name: Playground
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  playground:
+    if: |
+      contains(github.event.issue.labels.*.name, 'playground') || contains(github.event.pull_request.labels.*.name, 'playground') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Announce Playground Run
+        run: |
+          echo "This is a playground run for safe, experimental automation."
+          echo "Feel free to test, self-heal, or experiment. Artifacts will be auto-cleaned."
+
+      - name: Checkout code (if PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+
+      - name: Run agent/human experiment script (optional)
+        run: |
+          echo "You can add any experiment, test, or bot-driven fix here."
+          echo "For example, agents can submit a PR with a playground label and this script will run."
+
+      - name: Clean up playground artifacts
+        run: |
+          echo "Cleaning up playground artifacts..."
+          # Add commands to remove temp files, logs, etc.
+
+      - name: Comment on issue/PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.issue.number ? context.issue : context.payload.pull_request ? {owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.pull_request.number} : null;
+            if (issue) {
+              github.issues.createComment({
+                ...issue,
+                body: '✅ Playground workflow completed! This was a safe, experimental run. If you want to try again, just add the `playground` label.'
+              });
+            }

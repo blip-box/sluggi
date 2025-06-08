@@ -1,0 +1,76 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+.Python
+build/
+dist/
+.egg-info/
+.eggs/
+*.egg
+*.egg-info/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.ruff_cache/
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+
+# ========================
+# Environment variables
+# ========================
+.env
+.env.*
+
+# ========================
+# Editor directories and files
+# ========================
+.vscode/
+.cursor/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.windsurfrules
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ========================
+# macOS
+# ========================
+.DS_Store
+
+# ========================
+# MkDocs
+# ========================
+site/
+docs/site/
+
+# ========================
+# End of .gitignore
+# ========================

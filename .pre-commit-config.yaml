@@ -1,0 +1,25 @@
+# See https://pre-commit.com for more details
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.11.13
+    hooks:
+      - id: ruff
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.12
+    hooks:
+      - id: uv-lock

@@ -1,0 +1,13 @@
+include README.md
+include LICENSE
+include pyproject.toml
+include CHANGELOG.md
+include SECURITY.md
+include CODE_OF_CONDUCT.md
+include RELEASE.md
+recursive-include sluggi *.py
+# The following are included in sdist but not in the wheel
+recursive-include tests *.py
+recursive-include scripts *.py
+exclude tests/*
+exclude scripts/*

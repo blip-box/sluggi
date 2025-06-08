@@ -1,0 +1,22 @@
+# Automatically enables auto-merge for Dependabot PRs. Keeps dependencies up-to-date with zero friction for humans and agents.
+name: Auto Merge Dependabot PRs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  automerge:
+    if: |
+      github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge for Dependabot PRs
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: squash
+          pull-request-number: ${{ github.event.pull_request.number }}

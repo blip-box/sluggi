@@ -1,0 +1,20 @@
+# Lint commit messages for Conventional Commits compliance
+name: Commit Lint
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+jobs:
+  commit-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Lint commit messages
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: .commitlintrc.yml

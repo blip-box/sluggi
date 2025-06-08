@@ -1,0 +1,46 @@
+site_name: sluggi Documentation
+site_description: Modern, high-performance Python library for generating clean, URL-safe slugs.
+site_author: "Atilla Guzel <33524244+atillaguzel@users.noreply.github.com>"
+repo_url: https://github.com/blip-box/sluggi
+repo_name: blip-box/sluggi
+theme:
+  name: shadcn
+  pygments_style: dracula
+  icon: heroicons:rocket-launch
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - API Reference: api.md
+  - CLI: cli.md
+  - Advanced: advanced.md
+  - FAQ & Troubleshooting: faq.md
+  - Deploy: deploy.md
+  - Contributing: contributing.md
+plugins:
+  - search # put it first to inject out custom code
+  - excalidraw
+
+markdown_extensions:
+  admonition:
+  codehilite:
+  fenced_code:
+  extra:
+  pymdownx.details:
+  pymdownx.blocks.details:
+  pymdownx.tabbed:
+  pymdownx.snippets:
+  pymdownx.blocks.tab:
+    combine_header_slug: true
+    separator: ___
+    slugify:
+      !!python/object/apply:pymdownx.slugs.slugify { kwds: { case: lower } }
+  pymdownx.progressbar:
+  pymdownx.arithmatex:
+    generic: true
+  shadcn.extensions.echarts.alpha:
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/blip-box/sluggi
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/sluggi/

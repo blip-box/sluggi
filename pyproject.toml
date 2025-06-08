@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sluggi"
+version = "0.1.0"
+description = "A modern, high-performance Python library for turning text into clean, URL-safe slugs."
+authors = [{ name = "atillaguzel" }]
+license = { text = "MIT" }
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.9"
+keywords = [
+    "slug",
+    "slugify",
+    "url",
+    "text",
+    "python",
+    "unicode",
+    "transliteration",
+    "cli"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+    "Operating System :: OS Independent",
+    "Natural Language :: English"
+]
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.4.0",
+    "pytest-cov>=6.1.1",
+    "hypothesis>=6.131.25",
+    "pytest-asyncio>=1.0.0"
+]
+cli = [
+    "typer>=0.9",
+    "rich>=13.0"
+]
+dev = [
+    "black>=25.1.0",
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.2",
+    "mutmut>=3.3.0",
+    "requests>=2.31.0",
+    "python-slugify>=8.0.4"
+]
+emoji = [
+    "emoji>=2.14.1"
+]
+
+[project.scripts]
+sluggi = "sluggi.cli:app"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "D",    # pydocstyle (docstring style)
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (modern Python syntax)
+    "N",    # pep8-naming
+]
+ignore = [
+    "D203", # one-blank-line-before-class (conflicts with D211)
+    "D205", # 1 blank line required between summary line and description
+    "D213", # multi-line-summary-second-line (conflicts with D212)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.urls]
+Homepage = "https://github.com/blip-box/sluggi"
+Repository = "https://github.com/blip-box/sluggi"
+Documentation = "https://github.com/blip-box/sluggi#readme"
+Changelog = "https://github.com/blip-box/sluggi/blob/main/CHANGELOG.md"
+Issues = "https://github.com/blip-box/sluggi/issues"

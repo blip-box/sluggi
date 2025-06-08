@@ -1,0 +1,48 @@
+# Deploys MkDocs documentation to GitHub Pages on push to main.
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-shadcn==0.5.0
+
+      - name: Load site cache
+        uses: actions/cache@v4
+        with:
+          key: mkdocs
+          path: .cache
+
+      - name: Build site
+        run: cd docs && mkdocs build -d ../site
+
+
+  publish:
+    needs: build
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

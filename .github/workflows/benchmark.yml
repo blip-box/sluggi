@@ -1,0 +1,47 @@
+# Runs performance benchmarks weekly and on demand. Generates and pushes a badge for transparency. Suitable for both human and agent-triggered runs.
+name: Benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 0'  # Every Sunday at 5am UTC
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: '3.13'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install project dependencies (all extras)
+        run: uv sync --all-extras
+      - name: Run batch benchmark
+        run: uv run python scripts/run_benchmarks.py --n 20000 --length 40 --mode all --json-summary
+      - name: Generate benchmark badge
+        run: uv run python scripts/generate_badge.py --type benchmark --input benchmark.json --output benchmark-badge.svg
+      - name: Upload benchmark artifact
+        if: env.GITHUB_ACTIONS && env.GITHUB_ACTIONS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark.json
+      - name: Upload benchmark badge artifact
+        if: env.GITHUB_ACTIONS && env.GITHUB_ACTIONS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-badge
+          path: benchmark-badge.svg
+      - name: Commit and push benchmark badge to main
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --ff-only
+          git add benchmark-badge.svg
+          git commit -m "chore: update benchmark badge [skip ci]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,34 @@
+# Labeler configuration for github/labeler action
+# See: https://github.com/actions/labeler
+
+bug:
+  - '**/bug_report.md'
+  - '**/bug*'
+
+agent:
+  - '**/quick-issue.md'
+  - '**/agent*'
+  # Label for agent-generated issues/PRs
+
+playground:
+  - '**/playground*'
+  - '**/playground.yml'
+  # Label for experimental or agent-driven playground runs
+
+enhancement:
+  - '**/feature_request.md'
+  - '**/feature*'
+
+documentation:
+  - '**/doc_request.md'
+  - '**/docs/**'
+  - '**/*.md'
+
+question:
+  - '**/question.md'
+  - '**/question*'
+
+ci:
+  - '.github/workflows/**'
+
+# Removed release label mapping as release.yml is gone.
