@@ -13,6 +13,7 @@ jobs:
       - name: Parse issue/PR for agent/human and auto-label
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             // Unified triage for issues and PRs
             const isPR = !!context.payload.pull_request;
