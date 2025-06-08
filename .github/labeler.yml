@@ -1,34 +1,59 @@
 # Labeler configuration for github/labeler action
 # See: https://github.com/actions/labeler
 
+# --- Type Labels ---
 bug:
   - '**/bug_report.md'
   - '**/bug*'
-
-agent:
-  - '**/quick-issue.md'
-  - '**/agent*'
-  # Label for agent-generated issues/PRs
-
-playground:
-  - '**/playground*'
-  - '**/playground.yml'
-  # Label for experimental or agent-driven playground runs
-
 enhancement:
   - '**/feature_request.md'
   - '**/feature*'
-
 documentation:
   - '**/doc_request.md'
   - '**/docs/**'
   - '**/*.md'
-
 question:
   - '**/question.md'
   - '**/question*'
 
+# --- Area/Component Labels ---
+cli:
+  - 'sluggi/cli.py'
+api:
+  - 'sluggi/api.py'
+core:
+  - 'sluggi/constants.py'
+  - 'sluggi/replacements.py'
+  - 'sluggi/utils.py'
+  - 'sluggi/__init__.py'
+tests:
+  - 'tests/**'
+
+# --- Tech/Language Labels ---
+python:
+  - '**/*.py'
+yaml:
+  - '**/*.yml'
+  - '**/*.yaml'
+markdown:
+  - '**/*.md'
+
+# --- CI/CD ---
 ci:
   - '.github/workflows/**'
 
-# Removed release label mapping as release.yml is gone.
+# --- Special/Automation Labels ---
+agent:
+  - '**/quick-issue.md'
+  - '**/agent*'
+playground:
+  - '**/playground*'
+  - '**/playground.yml'
+
+# --- Branch/Title Patterns (optional, requires labeler v4+) ---
+dependencies:
+  - any: ['**']
+    title: '/^dependabot\//'
+release:
+  - any: ['**']
+    branch: '/^release\//'
