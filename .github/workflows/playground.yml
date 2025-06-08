@@ -37,7 +37,7 @@ jobs:
           # Add commands to remove temp files, logs, etc.
 
       - name: Comment on issue/PR
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const issue = context.issue.number ? context.issue : context.payload.pull_request ? {owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.pull_request.number} : null;
