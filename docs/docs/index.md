@@ -3,7 +3,7 @@
 > Modern, blazing-fast Python library & CLI for generating clean, URL-safe slugs from any text.
 
 [![PyPI](https://img.shields.io/pypi/v/sluggi.svg)](https://pypi.org/project/sluggi/)
-[![Tests](https://github.com/blip-box/sluggi/actions/workflows/test.yml/badge.svg)](https://github.com/blip-box/sluggi/actions)
+[![CI](https://github.com/blip-box/sluggi/actions/workflows/ci.yml/badge.svg)](https://github.com/blip-box/sluggi/actions/workflows/ci.yml)
 [![Docs](https://github.com/blip-box/sluggi/actions/workflows/deploy-docs.yml/badge.svg)](https://blip-box.github.io/sluggi/)
 
 - 🚀 **Fast & robust**: Optimized for performance and reliability
