@@ -6,6 +6,10 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
   triage:
     runs-on: ubuntu-latest
