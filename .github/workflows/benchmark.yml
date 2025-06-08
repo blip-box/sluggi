@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: '0 5 * * 0'  # Every Sunday at 5am UTC
 
+permissions:
+  contents: write
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
@@ -23,13 +26,11 @@ jobs:
       - name: Generate benchmark badge
         run: uv run python scripts/generate_badge.py --type benchmark --input benchmark.json --output benchmark-badge.svg
       - name: Upload benchmark artifact
-        if: env.GITHUB_ACTIONS && env.GITHUB_ACTIONS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: benchmark-results
           path: benchmark.json
       - name: Upload benchmark badge artifact
-        if: env.GITHUB_ACTIONS && env.GITHUB_ACTIONS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: benchmark-badge
