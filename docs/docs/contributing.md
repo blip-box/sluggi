@@ -18,7 +18,7 @@ Thank you for helping make sluggi better! We welcome all contributions—code, d
 - **Testing:**
   - Run tests with `pytest`
 - **Open issues/PRs** for bugs, features, or improvements.
-- See our [Code of Conduct](https://github.com/blip-box/sluggi/blob/main/CODE_OF_CONDUCT.md) and [Security Policy](https://github.com/blip-box/sluggi/blob/main/SECURITY.md) for community and reporting guidelines.
+- See our [Code of Conduct](https://github.com/blip-box/sluggi/blob/main/.github/CODE_OF_CONDUCT.md) and [Security Policy](https://github.com/blip-box/sluggi/blob/main/.github/SECURITY.md) for community and reporting guidelines.
 
 ---
 
@@ -29,7 +29,7 @@ Thank you for helping make sluggi better! We welcome all contributions—code, d
 - Use clear, descriptive commit messages.
 - Reference related issues in your PR description.
 - At least one maintainer review is required.
-- Follow our [Release Process](https://github.com/blip-box/sluggi/blob/main/RELEASE.md) for version bumps and publishing.
+- Follow our [Release Process](https://github.com/blip-box/sluggi/blob/main/.github/RELEASE.md) for version bumps and publishing.
 
 ---
 
