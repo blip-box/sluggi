@@ -253,7 +253,7 @@ print(slug)  # emoji
 ```
 
 ```bash
-sluggi single "emoji: 😎🤖🎉" --no-process-emoji
+sluggi slug "emoji: 😎🤖🎉" --no-process-emoji
 # Output: emoji
 ```
 
@@ -299,16 +299,16 @@ pip install .[cli]
 
 ### Quick Start
 ```bash
-sluggi single "Γειά σου Κόσμε"
+sluggi slug "Γειά σου Κόσμε"
 # Output: geia-sou-kosme
 
-sluggi single "The quick brown fox jumps" --stopwords "the,fox"
+sluggi slug "The quick brown fox jumps" --stopwords "the,fox"
 # Output: quick-brown-jumps
 
-sluggi single "The Quick Brown Fox" --word-regex "[A-Z][a-z]+"
+sluggi slug "The Quick Brown Fox" --word-regex "[A-Z][a-z]+"
 # Output: The-Quick-Brown-Fox
 
-sluggi single "The Quick Brown Fox" --no-lowercase
+sluggi slug "The Quick Brown Fox" --no-lowercase
 # Output: The-Quick-Brown-Fox
 
 sluggi batch --input names.txt --output slugs.txt
