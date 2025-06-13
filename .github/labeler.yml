@@ -4,9 +4,8 @@
 
 # --- High-Priority Labels ---
 'BREAKING CHANGE':
-  - any:
-    - title: '/BREAKING CHANGE/'
-    - body: '/BREAKING CHANGE/'
+  - title: '(?i)BREAKING CHANGE' # If title contains "BREAKING CHANGE" (case-insensitive)
+  - body: '(?i)BREAKING CHANGE'  # OR if body contains "BREAKING CHANGE" (case-insensitive)
 
 # --- Type Labels ---
 'type: bug':
@@ -38,8 +37,6 @@
 'playground':
   - any: ['**/playground*', '**/playground.yml']
 'dependencies':
-  - any: ['**']
-    title: '/^dependabot\//'
+  - title: '(?i)^dependabot/' # If title starts with "dependabot/" (case-insensitive)
 'release':
-  - any: ['**']
-    branch: '/^release\//'
+  - head-branch: '(?i)^release/' # If head branch starts with "release/" (case-insensitive)
