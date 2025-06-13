@@ -1,35 +1,38 @@
-# Best-in-class labeler configuration for github/labeler action
 # See: https://github.com/actions/labeler
-# This configuration uses a prefix system (e.g., 'type:', 'scope:') for clarity and automation.
 
-# --- Type Labels ---
-'type: bug':
-  - any: ['**/bug_report.md', '**/bug*']
-'type: feature':
-  - any: ['**/feature_request.md', '**/feature*']
-'type: docs':
-  - any: ['**/doc_request.md', '**/docs/**', '**/*.md']
-'type: question':
-  - any: ['**/question.md', '**/question*']
-'type: chore':
-  - any: ['.github/**', 'pyproject.toml', 'scripts/**', '*.yml', '*.yaml']
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: docs/**
+  - head-branch: ["^docs", "docs"]
 
-# --- Scope Labels ---
-'scope: cli':
-  - any: ['sluggi/cli.py']
-'scope: api':
-  - any: ['sluggi/api.py']
-'scope: core':
-  - any: ['sluggi/constants.py', 'sluggi/replacements.py', 'sluggi/utils.py', 'sluggi/__init__.py']
-'scope: tests':
-  - any: ['tests/**']
-'scope: ci':
-  - any: ['.github/workflows/**']
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/workflows/**
+  - head-branch: ["^ci", "ci"]
 
-# --- Automation & Special Labels ---
-'agent':
-  - any: ['**/quick-issue.md', '**/agent*']
-'playground':
-  - any: ['**/playground*', '**/playground.yml']
-'release':
-  - head-branch: ['^release'] # If head branch starts with "release"
+test:
+  - changed-files:
+      - any-glob-to-any-file: tests/**
+  - head-branch: ["^test", "test"]
+
+source:
+  - changed-files:
+      - any-glob-to-any-file: sluggi/**
+
+feature:
+  - head-branch: ["^feature", "feature"]
+
+bug:
+  - head-branch: ["^bug", "bug"]
+
+chore:
+  - head-branch: ["^chore", "chore"]
+
+refactor:
+  - head-branch: ["^refactor", "refactor"]
+
+build:
+  - head-branch: ["^build", "build"]
+
+release:
+  - head-branch: ["^release", "release"]
