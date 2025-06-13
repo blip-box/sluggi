@@ -93,5 +93,5 @@ where = ["."]
 Homepage = "https://github.com/blip-box/sluggi"
 Repository = "https://github.com/blip-box/sluggi"
 Documentation = "https://github.com/blip-box/sluggi#readme"
-Changelog = "https://github.com/blip-box/sluggi/blob/main/CHANGELOG.md"
+Changelog = "https://github.com/blip-box/sluggi/releases"
 Issues = "https://github.com/blip-box/sluggi/issues"
