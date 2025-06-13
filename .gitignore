@@ -32,6 +32,11 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 .ruff_cache/
+mutmut_cache/
+
+# Profiling reports
+profile.prof
+*.prof
 
 # ========================
 # Logs
