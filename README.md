@@ -368,11 +368,15 @@ sluggi batch --input missing.txt
 
 ## Development & Contributing
 
-- Clone the repo and install dev dependencies:
+- Clone the repo:
   ```bash
   git clone https://github.com/blip-box/sluggi.git
   cd sluggi
-  pip install .[dev,cli]
+  ```
+- Create a virtual environment and install dependencies using uv:
+  ```bash
+  uv venv
+  uv pip install .[dev,cli]
   ```
 - Run tests and lints:
   ```bash
