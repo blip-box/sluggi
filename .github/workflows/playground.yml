@@ -24,7 +24,7 @@ jobs:
 
       - name: Checkout code (if PR)
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run agent/human experiment script (optional)
         run: |
