@@ -542,9 +542,6 @@ def batch(
     cmap = _parse_custom_map(custom_map)
     # Read input lines
     lines = _read_input_lines(input_file)
-    import sys
-
-    print(f"DEBUG: lines={lines!r}", file=sys.stderr)
     if not lines or all(not line.strip() for line in lines):
         import sys
 
