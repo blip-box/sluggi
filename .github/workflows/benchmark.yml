@@ -26,12 +26,12 @@ jobs:
       - name: Generate benchmark badge
         run: uv run python scripts/generate_badge.py --type benchmark --input benchmark.json --output benchmark-badge.svg
       - name: Upload benchmark artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-results
           path: benchmark.json
       - name: Upload benchmark badge artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-badge
           path: benchmark-badge.svg
