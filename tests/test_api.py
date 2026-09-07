@@ -298,3 +298,52 @@ def test_batch_type_error():
     """Test batch_slugify raises TypeError on non-iterable input."""
     with pytest.raises(TypeError):
         batch_slugify("not a list")
+
+
+# --- Pipeline order regression tests -----------------------------------------
+# The README documents the pipeline step by step. These tests pin that
+# documentation to the implementation so the two cannot drift apart silently.
+
+
+def test_default_pipeline_order_matches_readme():
+    """Test the default pipeline runs the steps in the documented order."""
+    from sluggi.api import SlugPipeline
+
+    steps = [step.__name__ for step in SlugPipeline.default_pipeline()]
+    assert steps == [
+        "pre_replacements_step",
+        "decode_entities_step",
+        "normalize_step",
+        "transliterate_step",
+        "emoji_step",
+        "lowercase_step",
+        "extract_words_step",
+        "filter_stopwords_step",
+        "join_words_step",
+        "strip_separators_step",
+        "truncate_step",
+        "post_replacements_step",
+    ]
+
+
+def test_custom_map_applies_at_post_stage():
+    """Test custom_map is staged "both", so it can rewrite the separator.
+
+    The separator only exists after join_words, so a mapping that changes it
+    proves the replacement engine runs again after the slug is assembled.
+    """
+    assert slugify("hello world", custom_map={"-": "+"}) == "hello+world"
+
+
+def test_lowercase_runs_before_word_extraction():
+    """Test lowercasing happens before extract_words, not after join_words.
+
+    A lowercase-only word_regex still matches every word; if casing were
+    applied after joining, this would yield "ello-orld".
+    """
+    assert slugify("Hello World", word_regex=r"[a-z]+") == "hello-world"
+
+
+def test_normalize_unicode_strips_diacritics():
+    """Test normalization is NFKD plus combining-mark removal, not NFKC."""
+    assert slugify("Café déjà vu") == "cafe-deja-vu"
