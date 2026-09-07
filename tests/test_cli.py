@@ -6,6 +6,7 @@ import re
 import pytest
 from click.testing import CliRunner
 
+from sluggi import __version__
 from sluggi.cli import app
 
 
@@ -348,10 +349,62 @@ def test_single_emoji():
 
 
 def test_version():
-    """Test CLI version command."""
+    """Test CLI --version reports the sluggi name, not the old slugify one."""
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert "slugify" in result.output
+    assert f"sluggi v{__version__}" in strip_ansi(result.output)
+    assert "slugify" not in strip_ansi(result.output)
+
+
+def test_version_command_matches_flag():
+    """Test the `version` subcommand agrees with the --version flag."""
+    from_flag = runner.invoke(app, ["--version"])
+    from_command = runner.invoke(app, ["version"])
+    assert from_command.exit_code == 0
+    assert strip_ansi(from_command.output) == strip_ansi(from_flag.output)
+
+
+def test_bench_runs_and_reports():
+    """Test `bench` actually benchmarks instead of printing a TODO."""
+    result = runner.invoke(app, ["bench", "--count", "50", "--length", "12"])
+    output = strip_ansi(result.output)
+    assert result.exit_code == 0
+    assert "not implemented" not in output.lower()
+    assert "slugify" in output and "batch_slugify" in output
+    assert "Items/sec" in output
+
+
+@pytest.mark.parametrize("flag,value", [("--count", "0"), ("--length", "0")])
+def test_bench_rejects_non_positive_arguments(flag, value):
+    """Test `bench` exits non-zero on nonsensical sizes."""
+    result = runner.invoke(app, ["bench", flag, value])
+    assert result.exit_code != 0
+
+
+def test_info_reports_missing_emoji_extra(monkeypatch):
+    """Test `info` names the emoji extra correctly when it is not installed.
+
+    Rich parses "[emoji]" as a style tag unless the bracket is escaped, which
+    silently renders the useless advice "pip install 'sluggi'".
+    """
+    import sluggi.api
+
+    monkeypatch.setattr(sluggi.api, "emoji", None)
+    result = runner.invoke(app, ["info"])
+    output = strip_ansi(result.output)
+    assert result.exit_code == 0
+    assert "sluggi[emoji]" in output
+
+
+def test_info_documents_working_completion_commands():
+    """Test `info` points at completion options the CLI actually provides."""
+    result = runner.invoke(app, ["info"])
+    output = strip_ansi(result.output)
+    assert result.exit_code == 0
+    # The old text advertised a `slugify` binary and _SLUGIFY_COMPLETE, neither
+    # of which exists; the real options are Typer's own.
+    assert "--install-completion" in output
+    assert "_SLUGIFY_COMPLETE" not in output
 
 
 def test_cli_no_args():
