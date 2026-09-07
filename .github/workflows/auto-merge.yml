@@ -13,6 +13,11 @@ jobs:
     if: |
       github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
+    # The repo default workflow token is read-only, so the scopes the
+    # auto-merge API needs must be requested explicitly here.
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Enable auto-merge for Dependabot PRs
         uses: peter-evans/enable-pull-request-automerge@v3
