@@ -202,10 +202,69 @@ def slug(
 
 
 @app.command()
-def bench():
-    """Run benchmarking tests for slugify."""
-    # TODO: implement benchmarking tests
-    console.print("Benchmarking tests not implemented yet.")
+def bench(
+    count: int = typer.Option(
+        2000, "--count", "-n", help="Number of strings to slugify."
+    ),
+    length: int = typer.Option(
+        40, "--length", "-l", help="Character length of each generated string."
+    ),
+):
+    """Benchmark sluggi throughput on generated input."""
+    import random
+    import time
+
+    from rich.table import Table
+
+    from .api import batch_slugify, slugify
+
+    if count < 1:
+        console.print("[red]--count must be at least 1.[/red]")
+        raise typer.Exit(code=2)
+    if length < 1:
+        console.print("[red]--length must be at least 1.[/red]")
+        raise typer.Exit(code=2)
+
+    # Mixed alphabet so the ASCII fast path is not the only thing measured.
+    alphabet = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ àéîõü"
+    rng = random.Random(0)  # Fixed seed keeps runs comparable.
+    samples = [
+        "".join(rng.choice(alphabet) for _ in range(length)) for _ in range(count)
+    ]
+
+    console.print(
+        f"[dim]Slugifying {count} strings of {length} characters "
+        f"(seed 0)...[/dim]\n"
+    )
+
+    start = time.perf_counter()
+    for text in samples:
+        slugify(text)
+    single_elapsed = time.perf_counter() - start
+
+    start = time.perf_counter()
+    batch_slugify(samples)
+    batch_elapsed = time.perf_counter() - start
+
+    table = Table(title="sluggi benchmark", header_style="bold yellow")
+    table.add_column("Mode", style="cyan", no_wrap=True)
+    table.add_column("Total", justify="right", style="green")
+    table.add_column("Per item", justify="right", style="green")
+    table.add_column("Items/sec", justify="right", style="green")
+    for label, elapsed in (
+        ("slugify", single_elapsed),
+        ("batch_slugify", batch_elapsed),
+    ):
+        per_item = elapsed / count
+        rate = count / elapsed if elapsed > 0 else float("inf")
+        table.add_row(
+            label, f"{elapsed:.3f}s", f"{per_item * 1e6:.1f}µs", f"{rate:,.0f}"
+        )
+    console.print(table)
+    console.print(
+        "\n[dim]For comparisons against other libraries, see "
+        "scripts/run_benchmarks.py[/dim]\n"
+    )
 
 
 @app.callback(invoke_without_command=True)
@@ -223,7 +282,7 @@ def main(
     Use `sluggi --help` or `sluggi <command> --help` for detailed usage.
     """
     if version:
-        typer.echo(f"slugify v{__version__}")
+        typer.echo(f"sluggi v{__version__}")
         raise typer.Exit(code=0)
     if ctx.invoked_subcommand is None:
         typer.echo(ctx.get_help())
@@ -233,7 +292,7 @@ def main(
 @app.command()
 def version():
     """Show the installed sluggi version and exit."""
-    typer.echo(f"slugify v{__version__}")
+    typer.echo(f"sluggi v{__version__}")
 
 
 batch_input_file = typer.Option(
@@ -601,6 +660,7 @@ def info():
     from rich.table import Table
 
     from . import __version__
+    from .api import emoji
 
     ascii_logo = """
 
@@ -624,35 +684,33 @@ def info():
         "[bold]Platform[/bold]",
         f"[cyan]{platform.system()} {platform.release()}[/cyan]",
     )
-    info_table.add_row("[bold]Emoji support[/bold]", "[green]Yes[/green]")
+    info_table.add_row(
+        "[bold]Emoji support[/bold]",
+        (
+            "[green]Yes[/green]"
+            if emoji is not None
+            else "[yellow]No (pip install 'sluggi\\[emoji]')[/yellow]"
+        ),
+    )
     info_table.add_row("[bold]Transliteration[/bold]", "[green]Yes[/green]")
     console.print(info_table)
 
     console.print("\n")
 
-    # Shell completion info as a Rich Table
+    # Shell completion is provided by Typer's own options.
     completion_table = Table(
         title="Shell Completion",
         show_header=True,
         header_style="bold yellow",
     )
-    completion_table.add_column("Shell", style="cyan", no_wrap=True)
+    completion_table.add_column("Action", style="cyan", no_wrap=True)
     completion_table.add_column("Command", style="green")
-    completion_table.add_row(
-        "bash",
-        'eval "$(_SLUGIFY_COMPLETE=bash_source slugify)"',
-    )
-    completion_table.add_row(
-        "zsh",
-        'eval "$(_SLUGIFY_COMPLETE=zsh_source slugify)"',
-    )
-    completion_table.add_row(
-        "fish",
-        "eval (env _SLUGIFY_COMPLETE=fish_source slugify)",
-    )
+    completion_table.add_row("Install for this shell", "sluggi --install-completion")
+    completion_table.add_row("Print the script", "sluggi --show-completion")
     console.print(completion_table)
     console.print(
-        "\n[dim]See Typer docs for more: https://typer.tiangolo.com/tutorial/commands/completion/[/dim]\n"
+        "\n[dim]See Typer docs for more: "
+        "https://typer.tiangolo.com/tutorial/commands/completion/[/dim]\n"
     )
 
 

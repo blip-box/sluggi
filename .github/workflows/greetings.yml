@@ -16,8 +16,8 @@ jobs:
           👋 **Welcome to the sluggi project!**
 
           Thanks for opening your first issue 🎉
-          The team and our automations will review your report soon. In the meantime, check out our [contributing guide](https://github.com/blip-box/sluggi/blob/main/CONTRIBUTING.md) or join the discussion. We're glad you're here!
+          The team and our automations will review your report soon. In the meantime, check out our [contributing guide](https://github.com/blip-box/sluggi/blob/main/.github/CONTRIBUTING.md) or join the discussion. We're glad you're here!
         pr_message: |
           🚀 **Thanks for your first pull request to sluggi!**
 
-          We appreciate your contribution and energy. Our maintainers and bots will review your PR soon. Please make sure you've read our [contributing guide](https://github.com/blip-box/sluggi/blob/main/CONTRIBUTING.md) and linked any related issues. Welcome to the sluggi community! 🐍
+          We appreciate your contribution and energy. Our maintainers and bots will review your PR soon. Please make sure you've read our [contributing guide](https://github.com/blip-box/sluggi/blob/main/.github/CONTRIBUTING.md) and linked any related issues. Welcome to the sluggi community! 🐍
