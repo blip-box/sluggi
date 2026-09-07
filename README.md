@@ -44,44 +44,51 @@
 
 sluggi processes text through a modular pipeline of single-responsibility functions, making the codebase more readable, maintainable, and extensible. Each step in the pipeline performs a distinct transformation, allowing for easy customization and extension.
 
+The steps below are the pipeline that `SlugPipeline.default_pipeline()` builds,
+in the order they actually run.
+
 **Pipeline Steps:**
 
-1. **normalize_unicode(text)**
-   Normalize Unicode characters to a canonical form (NFKC).
+1. **Pre-stage replacements**
+   Apply replacement rules registered for the `pre` stage, before anything else touches the text.
 2. **decode_html_entities_and_refs(text)**
-   Decode HTML entities and character references to their Unicode equivalents.
-3. **convert_emojis(text)**
-   Replace emojis with their textual representations.
+   Decode named HTML entities (`&eacute;`) and decimal/hexadecimal character references.
+3. **normalize_unicode(text)**
+   Normalize to **NFKD** and strip combining marks, so `Café` becomes `Cafe`. Skipped for pure-ASCII input.
 4. **transliterate_text(text)**
-   Transliterate non-ASCII characters to ASCII (where possible).
-5. **apply_custom_replacements(text, custom_map)**
-   Apply user-defined or staged character/string replacements.
-6. **extract_words(text, word_regex)**
+   Transliterate non-ASCII characters to ASCII where a mapping exists. Skipped for ASCII input, or when `process_transliteration=False`.
+5. **convert_emojis(text, separator)**
+   Replace emoji with their textual names. Requires the optional `emoji` extra *and* `process_emoji=True` (it is off by default).
+6. **to_lowercase(text)**
+   Lowercase the text when `lowercase=True`. Note this happens **before** words are extracted, so a custom `word_regex` sees text that is already lowercased.
+7. **extract_words(text, word_regex)**
    Extract words using a customizable regex pattern.
-7. **filter_stopwords(words, stopwords)**
-   Remove unwanted words (e.g., stopwords) from the list.
-8. **join_words(words, separator)**
+8. **filter_stopwords(words, stopwords, lowercase)**
+   Remove unwanted words (e.g. stopwords) from the list.
+9. **join_words(words, separator)**
    Join words using the specified separator.
-9. **to_lowercase(text, lowercase)**
-   Convert the result to lowercase if requested.
 10. **strip_separators(text, separator)**
-    Remove leading/trailing separators.
-11. **smart_truncate(text, max_length, separator)**
-    Optionally truncate the slug at a word boundary.
+    Remove leading and trailing separators.
+11. **truncate_slug(text, max_length, word_boundary, separator)**
+    Optionally truncate the slug, at a word boundary by default.
+12. **Post-stage replacements**
+    Apply replacement rules registered for the `post` stage, once the slug is otherwise final.
 
 **Processing Flow:**
 
     Input Text
       ↓
-    normalize_unicode
+    pre-stage replacements
       ↓
     decode_html_entities_and_refs
       ↓
-    convert_emojis
+    normalize_unicode
       ↓
     transliterate_text
       ↓
-    apply_custom_replacements
+    convert_emojis
+      ↓
+    to_lowercase
       ↓
     extract_words
       ↓
@@ -89,13 +96,33 @@ sluggi processes text through a modular pipeline of single-responsibility functi
       ↓
     join_words
       ↓
-    to_lowercase
-      ↓
     strip_separators
       ↓
-    smart_truncate
+    truncate_slug
+      ↓
+    post-stage replacements
       ↓
     Final Slug
+
+### A note on replacements
+
+Replacements are **staged**, not a single step. A rule carries a `stage` of
+`"pre"`, `"post"`, or `"both"`, and the pipeline runs the matching rules at the
+two points shown above.
+
+The `custom_map` argument is converted with `stage="both"`, so a custom mapping
+is applied **twice** — once before normalization and once after the slug is
+assembled. That is why a mapping can rewrite the separator, which only exists
+after `join_words`:
+
+```python
+>>> from sluggi import slugify
+>>> slugify("hello world", custom_map={"-": "+"})
+'hello+world'
+```
+
+For finer control, build a `ReplacementConfig` of `ReplacementRule` objects and
+pass it as `replacement_config` to pin each rule to a single stage.
 
 This modular approach makes it easy to add, remove, or modify steps in the pipeline. Each function is pure and well-documented. See the API docs and source for details on customizing or extending the pipeline.
 

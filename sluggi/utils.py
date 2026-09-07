@@ -1,4 +1,4 @@
-"""Shared utility functions for sluggi (truncate, smart_truncate, etc)."""
+"""Shared utility functions for sluggi (slug truncation, etc)."""
 
 
 def truncate_slug(

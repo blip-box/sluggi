@@ -14,7 +14,7 @@ Key exports:
     - SlugPipeline: Advanced pipeline customization and extension.
     - Modular pipeline helpers: normalize_unicode, decode_html_entities_and_refs,
       convert_emojis, transliterate_text, extract_words, filter_stopwords, join_words,
-      to_lowercase, strip_separators, smart_truncate.
+      to_lowercase, strip_separators, truncate_slug.
 
 Pipeline design:
     The slugification process is broken into pure, single-purpose functions, each
