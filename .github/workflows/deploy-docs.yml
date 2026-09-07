@@ -12,6 +12,13 @@ permissions:
   pages: write
   id-token: write
 
+# A repository has a single Pages deployment, so concurrent runs contend for it.
+# Serialise them: let an in-flight deployment finish rather than cancelling it,
+# and drop superseded queued runs, since only the newest commit matters.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
