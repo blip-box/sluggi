@@ -22,6 +22,24 @@ Thank you for helping make sluggi better! We welcome all contributions—code, d
 
 ---
 
+## Agent-drafted changes
+
+Most of sluggi is drafted by AI coding agents and reviewed by a person. Changes
+drafted with an agent are welcome under the same rules as any other change:
+
+- Say so in the pull request description.
+- Include tests. A draft earns its merge with tests, and the tests are read as
+  carefully as the code.
+- Be able to explain every line. If a reviewer asks why, "the agent wrote it"
+  is not an answer.
+- Pull requests generated and submitted without a person reading them are
+  closed without review.
+
+`main` accepts reviewed pull requests with passing CI only, and the branch rules
+are public.
+
+---
+
 ## Pull Request Checklist
 
 - Branch from `main` and keep your branch up to date.
@@ -29,7 +47,7 @@ Thank you for helping make sluggi better! We welcome all contributions—code, d
 - Use clear, descriptive commit messages.
 - Reference related issues in your PR description.
 - At least one maintainer review is required.
-- Follow our [Release Process](https://github.com/blip-box/sluggi/blob/main/RELEASE.md) for version bumps and publishing.
+- Follow our [Release Process](https://github.com/blip-box/sluggi/blob/main/.github/RELEASE.md) for version bumps and publishing.
 
 ---
 
@@ -70,12 +88,10 @@ pre-commit run --all-files
 - [ ] Docs and [Changelog](https://github.com/blip-box/sluggi/blob/main/CHANGELOG.md) updated
 - [ ] Version bumped in `__init__.py` and `pyproject.toml`
 - [ ] Commit with message: `Release vX.Y.Z`
-- [ ] Push to `main` and create a GitHub release
-- [ ] Publish to PyPI:
-  ```bash
-  python -m build
-  twine upload dist/*
-  ```
+- [ ] Add the changelog section with its sign-off line
+- [ ] Tag `vX.Y.Z` and push the tag; the release workflow builds, publishes to
+      PyPI, signs, and drafts the GitHub release with notes from the changelog
+- [ ] Read the draft release and publish it
 - [ ] Verify GitHub Pages documentation is up to date
 
 ---
