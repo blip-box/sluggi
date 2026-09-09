@@ -63,11 +63,16 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Download artifacts
         uses: actions/download-artifact@v8
         with:
           name: sluggi
           path: dist/
+      - name: Release notes from CHANGELOG.md
+        run: python3 scripts/release_notes.py "$GITHUB_REF_NAME" > release-notes.md
       - name: Sign the dists with Sigstore
         uses: sigstore/gh-action-sigstore-python@v3.5.0
         with:
@@ -81,7 +86,7 @@ jobs:
           gh release create
           "$GITHUB_REF_NAME"
           --repo "$GITHUB_REPOSITORY"
-          --notes ""
+          --notes-file release-notes.md
           --draft
       - name: Upload artifact signatures to GitHub Release
         env:

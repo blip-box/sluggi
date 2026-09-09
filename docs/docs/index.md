@@ -1,6 +1,6 @@
 # sluggi
 
-> Modern, blazing-fast Python library & CLI for generating clean, URL-safe slugs from any text.
+> A Python library and CLI for generating clean, URL-safe slugs from any text. 20,000 strings in 0.74 seconds on the included benchmark, no runtime dependencies.
 
 [![PyPI](https://img.shields.io/pypi/v/sluggi.svg)](https://pypi.org/project/sluggi/)
 [![CI](https://github.com/blip-box/sluggi/actions/workflows/ci.yml/badge.svg)](https://github.com/blip-box/sluggi/actions/workflows/ci.yml)

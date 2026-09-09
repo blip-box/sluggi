@@ -1,42 +1,41 @@
 # Release Process
 
-This checklist ensures every release is consistent, high quality, and easy to verify.
+A release is a blip: small, tested, and signed off by a person. The workflow
+does the mechanical work; the engineer does the reading and the publishing.
 
----
+## 1. Before tagging
 
-## 1. Pre-release
+- [ ] Tests and linters pass on `main` (`pytest`, `ruff check .`, `black --check .`)
+- [ ] `CHANGELOG.md` has a `## [X.Y.Z] - YYYY-MM-DD` section for this release,
+      ending with the line `Drafted with AI coding agents. Reviewed and signed off by <name>.`
+- [ ] Version bumped in `pyproject.toml` and `sluggi/__init__.py`
+- [ ] Docs updated where behaviour changed
 
-- [ ] All tests and linters pass (`pytest`, `ruff check .`, `black --check .`)
-- [ ] All documentation and changelog entries are up to date
-- [ ] Version bumped in `sluggi/__init__.py` and `pyproject.toml`
-- [ ] New features, bugfixes, and breaking changes are documented in `CHANGELOG.md`
-- [ ] Verify no sensitive data (e.g., `.env`) is tracked or published
+## 2. Tag
 
-## 2. Commit and Tag
+Merge the release pull request, then:
 
-- [ ] Commit changes with message: `Release vX.Y.Z`
-- [ ] Tag the release:
-  ```bash
-  git tag vX.Y.Z
-  git push --tags
-  ```
+```bash
+git checkout main && git pull
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
 
-## 3. GitHub Release
+## 3. The workflow (`.github/workflows/release.yml`)
 
-- [ ] Create a new release on GitHub
-- [ ] Include highlights/notes from `CHANGELOG.md`
-- [ ] Attach any relevant build artifacts if needed
+On the tag push it builds the wheel and sdist, publishes them to PyPI through
+trusted publishing, signs them with Sigstore, and creates a **draft** GitHub
+release whose notes are the changelog section for that tag
+(`scripts/release_notes.py`). A tag without a changelog section fails the
+workflow on purpose.
 
-## 4. Publish to PyPI
+## 4. Publish
 
-- [ ] Build and upload:
-  ```bash
-  python -m build
-  twine upload dist/*
-  ```
-- [ ] Verify the release on PyPI: https://pypi.org/project/sluggi/
+- [ ] Open the draft release, read the notes and the attached artifacts
+- [ ] Check the version on PyPI: https://pypi.org/project/sluggi/
+- [ ] Publish the release. Publishing is the sign-off.
 
-## 5. Docs & Announcement
+## 5. Afterwards
 
-- [ ] Ensure GitHub Pages/docs are published and up to date (if applicable)
-- [ ] Announce the release (social, changelog, etc.)
+- [ ] Confirm the docs site deployed
+- [ ] Announce it if there is something worth announcing

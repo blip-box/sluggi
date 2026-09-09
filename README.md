@@ -1,6 +1,6 @@
 # sluggi
 
-**sluggi** — The modern, blazing-fast Python library and CLI for turning any text into clean, URL-safe slugs.
+**sluggi** — A Python library and CLI for turning any text into clean, URL-safe slugs. 20,000 strings in 0.74 seconds on the included benchmark, no runtime dependencies.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/sluggi.svg?logo=pypi)](https://pypi.org/project/sluggi/)
@@ -11,11 +11,12 @@
 
 
 
-> Inspired by slugify, reimagined for speed, Unicode, and robust parallel batch processing.
+> Inspired by slugify, rebuilt for Unicode and parallel batch processing. The first box out of [blipbox](https://blipbox.io), where agents draft and an engineer signs every release.
 
 ---
 
 ## Table of Contents
+- [How sluggi is built](#how-sluggi-is-built)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -29,9 +30,17 @@
 
 ---
 
+## How sluggi is built
+
+sluggi is the first box out of [blipbox](https://blipbox.io), the open-source software factory run by [nimbous](https://nimbous.co).
+
+- AI coding agents draft the code, the tests, and the docs, in pull requests.
+- Atilla Guzel reads every change before it merges. Every change arrives as a pull request with CI passing on Python 3.9 to 3.13; the [branch rules](https://github.com/blip-box/sluggi/rules?ref=refs%2Fheads%2Fmain) are public.
+- Every release is built and signed with Sigstore by the release workflow, published to PyPI, and carries the name of the engineer who signed it off in [CHANGELOG.md](CHANGELOG.md).
+
 ## Features
-- 🚀 **Fast:** Optimized for speed with minimal dependencies.
-- 🌍 **Unicode & Emoji:** Handles dozens of scripts, emoji, and edge cases out of the box.
+- 🚀 **Fast:** 20,000 strings in 0.74 s serial, 0.037 ms per slug, on the included benchmark (`scripts/benchmark_batch.py`). No runtime dependencies.
+- 🌍 **Unicode:** NFKD normalization for Latin diacritics, built-in transliteration for Greek and Cyrillic, custom mappings for anything else. Emoji become their names with the optional `emoji` extra.
 - 🔧 **Customizable:** Define your own character mappings and rules.
 - 🧵 **Parallel Batch:** True multi-core batch slugification (thread/process/serial modes).
 - ⚡ **Async Support:** Full asyncio-compatible API for modern Python apps.
