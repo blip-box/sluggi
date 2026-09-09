@@ -35,8 +35,8 @@ drafted with an agent are welcome under the same rules as any other change:
 - Pull requests generated and submitted without a person reading them are
   closed without review.
 
-`main` accepts reviewed pull requests with passing CI only, and the branch rules
-are public.
+Every change arrives as a pull request with CI passing and is read by a
+maintainer before it merges. The branch rules are public.
 
 ---
 

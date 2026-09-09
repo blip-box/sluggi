@@ -35,7 +35,7 @@
 sluggi is the first box out of [blipbox](https://blipbox.io), the open-source software factory run by [nimbous](https://nimbous.co).
 
 - AI coding agents draft the code, the tests, and the docs, in pull requests.
-- Atilla Guzel reads every change. `main` accepts reviewed pull requests with passing CI only, and the [branch rules](https://github.com/blip-box/sluggi/rules?ref=refs%2Fheads%2Fmain) are public.
+- Atilla Guzel reads every change before it merges. Every change arrives as a pull request with CI passing on Python 3.9 to 3.13; the [branch rules](https://github.com/blip-box/sluggi/rules?ref=refs%2Fheads%2Fmain) are public.
 - Every release is built and signed with Sigstore by the release workflow, published to PyPI, and carries the name of the engineer who signed it off in [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
