@@ -90,6 +90,12 @@ docstring-code-line-length = "dynamic"
 [tool.setuptools.packages.find]
 where = ["."]
 
+[tool.uv]
+# Lock-only floor for the eMudhra/emSign CA compromise (Oct 2026): certifi
+# reaches the dev extra through requests, and older bundles still trust the
+# compromised CAs. Not part of the published package metadata.
+constraint-dependencies = ["certifi>=2026.10.19"]
+
 [project.urls]
 Homepage = "https://github.com/blip-box/sluggi"
 Repository = "https://github.com/blip-box/sluggi"
