@@ -44,7 +44,7 @@ test = [
 ]
 cli = [
     "typer>=0.9",
-    "rich>=13.0"
+    "rich>=15.0.0"
 ]
 dev = [
     "black>=25.1.0",
