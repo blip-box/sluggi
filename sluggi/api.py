@@ -56,7 +56,6 @@ import unicodedata
 import warnings
 from collections.abc import Iterable
 from functools import lru_cache, partial
-from typing import Optional
 
 from .constants import (
     _BUILTIN_TRANSLIT_MAP,
@@ -214,7 +213,7 @@ def transliterate_text(text: str) -> str:
 
 def extract_words(
     text: str,
-    word_regex: Optional[str],
+    word_regex: str | None,
 ) -> list[str]:
     """Extract words using a custom regex or default pattern.
 
@@ -239,7 +238,7 @@ def extract_words(
 
 
 def filter_stopwords(
-    words: list[str], stopwords: Optional[Iterable[str]], lowercase: bool
+    words: list[str], stopwords: Iterable[str] | None, lowercase: bool
 ) -> list[str]:
     """Remove stopwords from the list of words.
 
@@ -485,17 +484,17 @@ class SlugPipeline:
 def slugify(
     text: str,
     separator: str = "-",
-    custom_map: Optional[dict[str, str]] = None,
-    stopwords: Optional[Iterable[str]] = None,
+    custom_map: dict[str, str] | None = None,
+    stopwords: Iterable[str] | None = None,
     lowercase: bool = True,
-    word_regex: Optional[str] = None,
+    word_regex: str | None = None,
     decode_entities: bool = True,
     decode_decimal: bool = True,
     decode_hexadecimal: bool = True,
-    max_length: Optional[int] = None,
+    max_length: int | None = None,
     word_boundary: bool = True,
     process_emoji: bool = False,
-    replacement_config: Optional[ReplacementConfig] = None,
+    replacement_config: ReplacementConfig | None = None,
 ) -> str:
     """Convert a string to a clean, URL-safe slug with Unicode normalization,
     transliteration, emoji handling, HTML entity/numeric reference decoding, and
@@ -567,14 +566,14 @@ def slugify(
 async def async_slugify(
     text: str,
     separator: str = "-",
-    custom_map: Optional[dict[str, str]] = None,
-    stopwords: Optional[Iterable[str]] = None,
+    custom_map: dict[str, str] | None = None,
+    stopwords: Iterable[str] | None = None,
     lowercase: bool = True,
-    word_regex: Optional[str] = None,
-    max_length: Optional[int] = None,
+    word_regex: str | None = None,
+    max_length: int | None = None,
     word_boundary: bool = True,
     process_emoji: bool = False,
-    replacement_config: Optional[ReplacementConfig] = None,
+    replacement_config: ReplacementConfig | None = None,
 ) -> str:
     """Async version of slugify, offloading to a thread."""
     return await asyncio.to_thread(
@@ -595,14 +594,14 @@ async def async_slugify(
 async def async_batch_slugify(
     texts: Iterable[str],
     separator: str = "-",
-    custom_map: Optional[dict[str, str]] = None,
-    stopwords: Optional[Iterable[str]] = None,
+    custom_map: dict[str, str] | None = None,
+    stopwords: Iterable[str] | None = None,
     lowercase: bool = True,
-    word_regex: Optional[str] = None,
+    word_regex: str | None = None,
     parallel: bool = False,
-    workers: Optional[int] = None,
+    workers: int | None = None,
     chunk_size: int = 1000,
-    max_length: Optional[int] = None,
+    max_length: int | None = None,
     word_boundary: bool = True,
     process_emoji: bool = False,
 ) -> list[str]:
@@ -673,19 +672,19 @@ async def async_batch_slugify(
 def batch_slugify(
     texts: Iterable[str],
     separator: str = "-",
-    custom_map: Optional[dict[str, str]] = None,
-    stopwords: Optional[Iterable[str]] = None,
+    custom_map: dict[str, str] | None = None,
+    stopwords: Iterable[str] | None = None,
     lowercase: bool = True,
-    word_regex: Optional[str] = None,
+    word_regex: str | None = None,
     parallel: bool = False,
-    workers: Optional[int] = None,
+    workers: int | None = None,
     mode: str = "thread",
     chunk_size: int = 1000,
     cache_size: int = 2048,
-    max_length: Optional[int] = None,
+    max_length: int | None = None,
     word_boundary: bool = True,
     process_emoji: bool = False,
-    replacement_config: Optional[ReplacementConfig] = None,
+    replacement_config: ReplacementConfig | None = None,
 ) -> list[str]:
     """Slugify a batch of strings efficiently, with optional staged replacements.
 
@@ -821,11 +820,11 @@ def _get_cached_slugify(cache_size=2048):
     def _cached_slugify(
         text: str,
         separator: str,
-        cmap_str: Optional[str],
-        stopwords_str: Optional[str],
+        cmap_str: str | None,
+        stopwords_str: str | None,
         lowercase: bool,
-        word_regex: Optional[str] = None,
-        max_length: Optional[int] = None,
+        word_regex: str | None = None,
+        max_length: int | None = None,
         word_boundary: bool = True,
         process_emoji: bool = False,
     ) -> str:
@@ -854,15 +853,15 @@ _cached_slugify = _get_cached_slugify()
 def _process(
     text: str,
     separator: str = "-",
-    custom_map: Optional[dict[str, str]] = None,
-    stopwords: Optional[Iterable[str]] = None,
+    custom_map: dict[str, str] | None = None,
+    stopwords: Iterable[str] | None = None,
     lowercase: bool = True,
     use_cache: bool = True,
-    word_regex: Optional[str] = None,
-    max_length: Optional[int] = None,
+    word_regex: str | None = None,
+    max_length: int | None = None,
     word_boundary: bool = True,
     process_emoji: bool = False,
-    replacement_config: Optional[ReplacementConfig] = None,
+    replacement_config: ReplacementConfig | None = None,
 ) -> str:
     """Process a string for slugification.
 

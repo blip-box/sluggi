@@ -9,7 +9,7 @@ description = "A Python library and CLI for turning text into clean, URL-safe sl
 authors = [{ name = "atillaguzel" }]
 license = { text = "MIT" }
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = [
     "slug",
     "slugify",
@@ -22,7 +22,6 @@ keywords = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -79,6 +78,7 @@ ignore = [
     "D203", # one-blank-line-before-class (conflicts with D211)
     "D205", # 1 blank line required between summary line and description
     "D213", # multi-line-summary-second-line (conflicts with D212)
+    "UP038", # deprecated upstream: isinstance(x, (A, B)) is the faster form
 ]
 
 [tool.ruff.format]

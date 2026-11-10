@@ -20,6 +20,10 @@ repos:
       - id: commitlint
         stages: [commit-msg]
         additional_dependencies: ["@commitlint/config-conventional"]
+        # A manual pin: without it nodeenv takes the first entry of nodejs.org's
+        # release index, a pre-release since Node 27's alpha, and fails to
+        # parse it. Dependabot does not bump this.
+        language_version: 24.22.1
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.7.13
     hooks:

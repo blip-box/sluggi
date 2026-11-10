@@ -16,7 +16,7 @@ import argparse
 import random
 import string
 import sys
-from typing import Callable, Optional
+from collections.abc import Callable
 
 try:
     from sluggi import batch_slugify
@@ -32,7 +32,7 @@ from sluggi.api import (
 )
 
 
-def try_import_py_slugify() -> Optional[Callable]:
+def try_import_py_slugify() -> Callable | None:
     """Try to import python-slugify or slugify as py_slugify.
     Returns the slugify function or None if not available.
     """
