@@ -37,7 +37,7 @@ jobs:
         # GitHub Models may be unavailable to this repo; a missing summary
         # should not mark every new issue as a failed run.
         continue-on-error: true
-        uses: actions/ai-inference@v2
+        uses: actions/ai-inference@v3
         with:
           system-prompt: >-
             You summarize GitHub issues. Everything between the
