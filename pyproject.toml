@@ -38,23 +38,23 @@ dependencies = []
 test = [
     "pytest>=8.4.0",
     "pytest-cov>=7.1.0",
-    "hypothesis>=6.131.25",
-    "pytest-asyncio>=1.0.0"
+    "hypothesis>=6.168.5",
+    "pytest-asyncio>=1.4.1.post1"
 ]
 cli = [
-    "typer>=0.9",
+    "typer>=0.27.3",
     "rich>=15.0.0"
 ]
 dev = [
     "black>=25.1.0",
-    "pre-commit>=4.2.0",
-    "ruff>=0.11.2",
-    "mutmut>=3.3.0",
-    "requests>=2.31.0",
+    "pre-commit>=4.6.2",
+    "ruff>=0.17.3",
+    "mutmut>=3.8.1",
+    "requests>=2.34.2",
     "python-slugify>=8.0.4"
 ]
 emoji = [
-    "emoji>=2.14.1"
+    "emoji>=2.16.0"
 ]
 
 [project.scripts]
