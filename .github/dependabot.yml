@@ -1,12 +1,48 @@
+# Weekly updates, grouped so minor and patch bumps arrive as one PR per
+# ecosystem. The cooldown skips releases younger than seven days, which keeps
+# freshly published (and possibly compromised) versions out of the lockfile.
+#
+# Python dependencies use the uv ecosystem, which updates uv.lock. The pip
+# ecosystem did not understand the lock and could only raise the ">=" floors
+# in pyproject.toml, so every update changed the published metadata (including
+# the cli extra) while the lock stayed stale. increase-if-necessary keeps the
+# floors as they are whenever they already allow the new release.
+#
+# No commit-message prefix is set on purpose: Dependabot then copies the
+# repository's own "build(deps): bump ..." style, which commitlint accepts. An
+# explicit prefix makes it write "Bump" with a capital, which fails subject-case.
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/"
+  - package-ecosystem: uv
+    directory: /
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      interval: weekly
+    versioning-strategy: increase-if-necessary
+    cooldown:
+      default-days: 7
+    groups:
+      python:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: pre-commit
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      pre-commit:
+        patterns: ["*"]
+        update-types: [minor, patch]
