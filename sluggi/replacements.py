@@ -1,8 +1,9 @@
 """Replacement engine for sluggi: staged (pre/post/both) replacements."""
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable, Literal, Optional
+from typing import Literal
 
 Stage = Literal[
     "pre",
@@ -19,7 +20,7 @@ class ReplacementRule:
     new: str
     stage: Stage = "both"
     use_regex: bool = False
-    func: Optional[Callable[[str], str]] = None  # Custom logic (optional)
+    func: Callable[[str], str] | None = None  # Custom logic (optional)
 
 
 @dataclass
@@ -39,7 +40,7 @@ class ReplacementEngine:
         """Initialize the engine and precompile regex rules."""
         self.config = config
         # Precompile regex rules for performance
-        self._compiled_rules: list[tuple[ReplacementRule, Optional[re.Pattern]]] = []
+        self._compiled_rules: list[tuple[ReplacementRule, re.Pattern | None]] = []
         for rule in config.rules:
             pattern = re.compile(rule.old) if rule.use_regex else None
             self._compiled_rules.append((rule, pattern))
@@ -76,7 +77,7 @@ class ReplacementEngine:
 
 
 def custom_map_to_config(
-    custom_map: Optional[dict],
+    custom_map: dict | None,
     stage: Stage = "both",
 ) -> ReplacementConfig:
     """Convert a custom mapping dictionary to a ReplacementConfig."""

@@ -6,7 +6,6 @@ parallel processing support.
 
 import json
 import sys
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -85,10 +84,10 @@ def slug(
         None,
         help="Text to slugify. If omitted, reads from stdin or --input file.",
     ),
-    input: Optional[str] = typer.Option(
+    input: str | None = typer.Option(
         None, "--input", "-i", help="Input file (overrides text/stdin)"
     ),
-    output: Optional[str] = typer.Option(
+    output: str | None = typer.Option(
         None, "--output", "-o", help="Output file (writes slug result)"
     ),
     process_emoji: bool = typer.Option(
@@ -97,14 +96,14 @@ def slug(
         help="Enable emoji-to-name conversion (default: off)",
     ),
     separator: str = single_separator,
-    max_length: Optional[int] = single_max_length,
+    max_length: int | None = single_max_length,
     word_boundary: bool = single_word_boundary,
-    stopwords: Optional[str] = single_stopwords,
-    regex: Optional[str] = typer.Option(
+    stopwords: str | None = single_stopwords,
+    regex: str | None = typer.Option(
         None, "--regex", help="Custom regex for word extraction"
     ),
     no_lowercase: bool = single_no_lowercase,
-    custom_map: Optional[str] = typer.Option(
+    custom_map: str | None = typer.Option(
         None, "--custom-map", help='Custom mapping as JSON, e.g. \'{"ä": "ae"}\''
     ),
     decode_entities: bool = typer.Option(
@@ -270,7 +269,7 @@ def bench(
 @app.callback(invoke_without_command=True)
 def main(
     ctx: typer.Context,
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         is_eager=True,
@@ -374,7 +373,7 @@ def _validate_mode(mode: str) -> None:
         raise typer.Exit(1)
 
 
-def _parse_custom_map(custom_map: Optional[str]) -> Optional[dict]:
+def _parse_custom_map(custom_map: str | None) -> dict | None:
     """Parse a custom mapping string as JSON, or return None if not provided.
 
     Args:
@@ -397,7 +396,7 @@ def _parse_custom_map(custom_map: Optional[str]) -> Optional[dict]:
     return cmap
 
 
-def _read_input_lines(input_file: Optional[typer.FileText]) -> list[str]:
+def _read_input_lines(input_file: typer.FileText | None) -> list[str]:
     """Read lines from the input file or stdin.
 
     Args:
@@ -547,21 +546,21 @@ batch_process_emoji = typer.Option(
 
 @app.command()
 def batch(
-    input_file: Optional[typer.FileText] = batch_input_file,
+    input_file: typer.FileText | None = batch_input_file,
     separator: str = batch_separator,
-    custom_map: Optional[str] = batch_custom_map,
-    stopwords: Optional[str] = batch_stopwords,
-    output: Optional[str] = batch_output,
+    custom_map: str | None = batch_custom_map,
+    stopwords: str | None = batch_stopwords,
+    output: str | None = batch_output,
     dry_run: bool = batch_dry_run,
     quiet: bool = batch_quiet,
     parallel: bool = batch_parallel,
-    workers: Optional[int] = batch_workers,
+    workers: int | None = batch_workers,
     mode: str = batch_mode,
-    word_regex: Optional[str] = batch_word_regex,
-    max_length: Optional[int] = batch_max_length,
+    word_regex: str | None = batch_word_regex,
+    max_length: int | None = batch_max_length,
     word_boundary: bool = batch_word_boundary,
     no_lowercase: bool = batch_no_lowercase,
-    output_format: Optional[str] = batch_output_format,
+    output_format: str | None = batch_output_format,
     display_output: bool = batch_display_output,
     process_emoji: bool = batch_process_emoji,
 ) -> None:
