@@ -22,7 +22,7 @@ sluggi outperforms legacy slugification tools with full Unicode, emoji, and asyn
 
 ## Get Started
 
-**Requirements:** Python 3.8+
+**Requirements:** Python 3.10 or newer
 
 Install with pip:
 

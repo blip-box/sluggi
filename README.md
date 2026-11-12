@@ -39,7 +39,7 @@ sluggi is the first box out of [blipbox](https://blipbox.io), the open-source so
 - Every release is built and signed with Sigstore by the release workflow, published to PyPI, and carries the name of the engineer who signed it off in [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
-- 🚀 **Fast:** 20,000 strings in 0.74 s serial, 0.037 ms per slug, on the included benchmark (`scripts/benchmark_batch.py`). No runtime dependencies.
+- 🚀 **Fast:** 20,000 strings in 0.74 s serial, 0.037 ms per slug, measured in June 2025 (see [Performance & Benchmarks](#performance--benchmarks)). No runtime dependencies.
 - 🌍 **Unicode:** NFKD normalization for Latin diacritics, built-in transliteration for Greek and Cyrillic, custom mappings for anything else. Emoji become their names with the optional `emoji` extra.
 - 🔧 **Customizable:** Define your own character mappings and rules.
 - 🧵 **Parallel Batch:** True multi-core batch slugification (thread/process/serial modes).
@@ -404,28 +404,18 @@ sluggi batch --input missing.txt
 
 ## Development & Contributing
 
-- Clone the repo:
-  ```bash
-  git clone https://github.com/blip-box/sluggi.git
-  cd sluggi
-  ```
-- Create a virtual environment and install dependencies using uv:
-  ```bash
-  uv venv
-  uv pip install .[dev,cli]
-  ```
-- Run tests and lints:
-  ```bash
-  pytest
-  ruff src/sluggi tests
-  black --check src/sluggi tests
-  ```
-- Pre-commit hooks:
-  ```bash
-  pre-commit install
-  pre-commit run --all-files
-  ```
-- PRs and issues welcome!
+```bash
+git clone https://github.com/blip-box/sluggi.git
+cd sluggi
+uv sync --all-extras        # the project, the CLI and every development tool
+uv run pre-commit install   # formatting, linting and the commit message check
+uv run pytest               # the tests
+uv run pre-commit run --all-files
+```
+
+[AGENTS.md](AGENTS.md) describes how the repository works, and
+[CONTRIBUTING.md](.github/CONTRIBUTING.md) what a pull request needs. PRs and
+issues welcome.
 
 ## Encoding Notes
 - Input and output files must be UTF-8 encoded.
@@ -438,11 +428,11 @@ sluggi batch --input missing.txt
 
 ## Performance & Benchmarks
 
-Batch slugification performance was measured using the included benchmark script:
-
-```bash
-python scripts/benchmark_batch.py
-```
+The table below was measured in June 2025 on one laptop: 20,000 random
+strings of 40 characters through `batch_slugify`, once per `mode`. The script
+that produced it has since been removed. To measure on your own machine, run
+`uv run sluggi bench --count 20000 --length 40` for serial and batch timings,
+or `uv run python scripts/run_benchmarks.py` to compare with python-slugify.
 
 **Results on 20,000 random strings:**
 
@@ -457,13 +447,11 @@ python scripts/benchmark_batch.py
 - **Process** mode (multiprocessing) enables true CPU parallelism, but has higher overhead and is best for very CPU-bound or expensive slugification tasks.
 - Use `--mode process` for multiprocessing, `--mode thread` for threads, or `--mode serial` for no parallelism. Combine with `--workers` to tune performance.
 
-**Script location:** `scripts/benchmark_batch.py`
-
 ### Shell Completion
 Enable tab-completion for your shell (bash, zsh, fish):
 ```bash
-sluggi completion bash   # or zsh, fish
-# Follow the printed instructions to enable completion in your shell
+sluggi --install-completion   # installs it for the current shell
+sluggi --show-completion      # prints the script instead
 ```
 
 ## License

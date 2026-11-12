@@ -10,6 +10,10 @@ The GitHub release notes for a tag are generated from that tag's section by
 
 ## [Unreleased]
 
+### Added
+- `AGENTS.md`: how the repository works, for coding agents and contributors,
+  with the decisions behind the setup and the reasons for them.
+
 ### Removed
 - Support for Python 3.9, which reached end of life in October 2025. The
   minimum is now Python 3.10. Installs on 3.9 keep resolving to 0.1.2.
