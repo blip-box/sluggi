@@ -6,8 +6,9 @@ and `cli` extras (`uv sync --all-extras`).
 
 ## `run_benchmarks.py`
 
-Benchmarks `sluggi` against `python-slugify` on synthetic or real input, in
-serial, thread and process modes. The figures in the README come from:
+Benchmarks `sluggi` against `python-slugify` on synthetic or real input.
+`--mode` picks which pipeline steps are on (`noemoji_notranslit`,
+`emoji_only`, `translit_only`, `both` or `all`):
 
 ```sh
 uv run python scripts/run_benchmarks.py --n 20000 --length 40 --mode all
