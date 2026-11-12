@@ -499,13 +499,3 @@ capabilities {
 }
 ```
 Or add the optional dependency `com.ibm.icu:icu4j` to your project.
-
----
-
-✨ **New Automation & Collaboration Features**
-
-- **Adaptive triage workflows**: Issues and PRs are now auto-labeled, parsed for agent/human status, and incomplete PRs are auto-closed for you—saving time for everyone.
-- **Agent-ready templates**: All issue and PR templates are designed for both humans and autonomous agents, with structured metadata and feedback built in.
-- **Playground workflow**: Safely experiment, test, or self-heal code with the new playground automation—perfect for bots and contributors alike.
-
-See [.github/workflows/README.md](.github/workflows/README.md) for more details on these next-generation automations!

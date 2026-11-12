@@ -1,68 +1,41 @@
-# GitHub Workflows for Sluggi
+# Workflows
 
-This folder contains all GitHub Actions workflows that automate, safeguard, and accelerate the development of the Sluggi project. These workflows are designed to be:
+What runs on this repository, and when. Keep this file true: a change to a
+workflow that makes a row here wrong fixes the row in the same pull request.
 
-- **Best-in-class:** Modern, modular, and easy to maintain.
-- **Agent/Human Friendly:** Seamlessly usable by both human contributors and autonomous agents/bots.
-- **Future-proof:** Ready for new automation paradigms and open experimentation.
+Every workflow runs with the repository's default token, which is read-only.
+A job that needs to write asks for exactly that scope in its own
+`permissions` block.
 
----
+| Workflow | Runs on | What it does |
+|---|---|---|
+| `ci.yml` | pushes to `main`, pull requests | Installs the project with uv on Python 3.10 to 3.13, runs the pre-commit hooks, Ruff and Black, then the tests with coverage, and uploads the coverage report to Codecov. The four `continuous-integration (3.x)` jobs are the required checks on `main`. |
+| `commit-lint.yml` | pull requests, pushes to `main` | Checks commit messages against `.commitlintrc.yml` (Conventional Commits). The same check runs locally as a commit-msg hook. |
+| `auto-merge.yml` | pull requests opened by Dependabot | Enables squash auto-merge, so the update lands on its own once the required checks pass. |
+| `label.yml` | pull requests | Applies the labels in `.github/labeler.yml`, by changed paths and branch prefix. |
+| `greetings.yml` | a contributor's first issue or pull request | Posts a welcome comment. |
+| `summary.yml` | new issues | Asks GitHub Models for a one-paragraph summary and posts it as a comment. The issue text reaches the model through a file, never a shell line. GitHub Models may be unavailable to the repository, so the step is allowed to fail. |
+| `deploy-docs.yml` | pushes to `main`, manual | Builds the MkDocs site in `docs/` and deploys it to GitHub Pages at https://blip-box.github.io/sluggi/. |
+| `release.yml` | tags `v*.*.*` | Builds the sdist and wheel, publishes them to PyPI through trusted publishing, signs them with Sigstore and drafts the GitHub release with the notes from `CHANGELOG.md`. The steps around it are in [RELEASE.md](../RELEASE.md). |
 
-## Workflow Overview
+Dependabot is configured in `../dependabot.yml`, not in a workflow: weekly,
+grouped, with a seven-day cooldown, updating `uv.lock` rather than the
+version floors in `pyproject.toml`.
 
-| Workflow         | Purpose                                                                                 | Human/Agent Friendly |
-|------------------|----------------------------------------------------------------------------------------|:--------------------:|
-| `ci.yml`         | Lint, format, test, and upload coverage on push/PR. Maintains code quality.             | ✅                   |
-| `benchmark.yml`  | Runs performance benchmarks and updates badge.                                          | ✅                   |
-| `changelog.yml`  | Auto-generates changelog on PR merge to main.                                          | ✅                   |
-| `docs.yml`       | Deploys MkDocs docs to GitHub Pages on main.                                           | ✅                   |
-| `auto-merge.yml` | Enables auto-merge for Dependabot PRs.                                                 | ✅                   |
-| `issue-triage.yml` | Adaptive triage for issues and PRs—labels and parses agent/human reports, auto-closes incomplete PRs, and triggers agent workflows. | ✅                   |
-| `playground.yml` | Safe, isolated workflow for agents/humans to experiment, test, or self-heal.           | ✅                   |
+## Rules
 
----
-
-## Advanced Triage Automation (Agent & Human)
-
-### Adaptive Issue & PR Triage (`issue-triage.yml`)
-- **Auto-labels** all issues and PRs based on agent/human identification and type checkboxes in templates.
-- **Parses JSON metadata** from issue/PR bodies and summarizes it in a comment for maintainers and agents.
-- **Auto-closes incomplete PRs**: If a PR is missing agent/human identification or a summary, it is automatically closed with a clear comment, ensuring only well-formed PRs remain open.
-- **Triggers additional workflows for agent changes**: If a PR is labeled as an `Agent/automation change`, a custom event (`agent-change-pr`) is dispatched, enabling downstream automation (e.g., special audits, analytics, or further agent review).
-- **Welcoming, actionable feedback** is posted for both humans and agents.
-
-### Playground Workflow (`playground.yml`)
-- Provides a safe, isolated environment for agents and humans to experiment, test, or self-heal code.
-- Triggered by labeling an issue/PR with `playground` or via manual dispatch.
-- All artifacts and experiments are automatically cleaned up.
-
----
-
-## How to Use
-
-- **For Humans:**
-  - Just push code, open PRs, or label issues as usual. Most automation is zero-config and will guide you if needed.
-  - Use the `playground` label if you want to safely experiment or test automation.
-- **For Agents/Bots:**
-  - All workflows are designed to be triggered by agents as well as humans.
-  - Use the `playground` workflow for safe experimentation or self-healing tasks.
-  - Issue templates and triage workflows are structured for easy parsing and auto-labeling.
-
----
-
-## Contributing or Extending
-
-- Add new workflows for new automation needs—be creative!
-- Document your workflow’s intent with a top-level comment.
-- Keep workflows modular and agent/human friendly.
-- If you have ideas for new agent-driven or AI-powered workflows, open a PR or issue.
-
----
-
-## Why This Matters
-
-This workflows folder is more than just CI—it's an automation platform for the next generation of open source, where humans and agents collaborate, experiment, and improve together.
-
----
-
-For more details, see individual workflow files or open an issue/question with the `quick-issue` template.
+- **No scheduled workflow without a watcher.** A benchmark workflow and a
+  mutation-testing workflow ran every Sunday for months and never once
+  succeeded: the first pushed a badge that the branch rules reject and that
+  nothing displayed, the second never finished inside GitHub's six-hour job
+  limit. Nobody noticed, because nothing was watching. Both were removed in
+  November 2026, with a playground workflow whose every step was an `echo`.
+  Add a scheduled workflow only together with something that fails loudly
+  when it stops working, such as a CI job that checks the workflow is still
+  enabled and its last run passed.
+- **Untrusted text never reaches a `run:` line.** Issue bodies, pull request
+  titles and model output go through `env:` and files, as `summary.yml`
+  shows. The GitHub Actions template engine expands `${{ }}` before the
+  shell sees the script.
+- **Workflows that must write ask for the scope they need** in the job's
+  `permissions` block, and nothing more.

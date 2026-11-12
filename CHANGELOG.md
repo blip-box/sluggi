@@ -13,6 +13,12 @@ The GitHub release notes for a tag are generated from that tag's section by
 ### Removed
 - Support for Python 3.9, which reached end of life in October 2025. The
   minimum is now Python 3.10. Installs on 3.9 keep resolving to 0.1.2.
+- The benchmark, mutation-testing and playground workflows, the badge and
+  mutation-score scripts they called, and `mutmut` and `requests` from the
+  `dev` extra. The benchmark job failed every week pushing a badge that
+  nothing displayed, the mutation job never finished inside GitHub's six-hour
+  limit, and the playground job never ran. `scripts/run_benchmarks.py` and
+  `sluggi bench` stay.
 
 ### Changed
 - README, docs, and package description state measured facts instead of
