@@ -1,4 +1,6 @@
-# See https://pre-commit.com for more details
+# Run everything with: uv run pre-commit run --all-files
+# The CI lint job runs the same command, so a clean local run means a clean
+# lint job. The commit-msg hook (commitlint) is installed by pre-commit install.
 repos:
   - repo: https://github.com/psf/black
     rev: 25.1.0
@@ -8,7 +10,7 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.3
     hooks:
-      - id: ruff
+      - id: ruff-check
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -28,3 +30,18 @@ repos:
     rev: 0.13.7
     hooks:
       - id: uv-lock
+  # Static analysis of the workflows: zizmor for security (unpinned actions,
+  # excess permissions, template injection), actionlint for correctness.
+  # zizmor's package needs Python 3.11 or newer, which is why development runs
+  # on the interpreter in .python-version rather than the support floor.
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.32.0
+    hooks:
+      - id: zizmor
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        # Build with a pinned Go that pre-commit downloads, not whatever Go is
+        # on PATH: a Go older than actionlint's go.mod cannot build it.
+        language_version: 1.27.2
