@@ -1,20 +1,25 @@
-# Lint commit messages for Conventional Commits compliance
+# Checks commit messages against .commitlintrc.yml (Conventional Commits).
+# The same check runs locally as the commit-msg hook in .pre-commit-config.yaml.
 name: Commit Lint
 
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
   push:
-    branches:
-      - main
+    branches: [main]
+
+permissions: {}
 
 jobs:
   commit-lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # the checkout, for the config file
+      pull-requests: read # list the pull request's commits
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Lint commit messages
-        uses: wagoid/commitlint-github-action@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
         with:
           configFile: .commitlintrc.yml

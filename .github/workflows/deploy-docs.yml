@@ -1,16 +1,14 @@
-# Deploys MkDocs documentation to GitHub Pages on push to main.
+# Builds the MkDocs site in docs/ and deploys it to GitHub Pages on every push
+# to main. The docs build is not part of uv.lock; the pins below are updated
+# by hand.
 name: Deploy Documentation
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 # A repository has a single Pages deployment, so concurrent runs contend for it.
 # Serialise them: let an in-flight deployment finish rather than cancelling it,
@@ -22,43 +20,34 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python-version: '3.13'
-
-      - name: Install dependencies
-        run: |
-          pip install mkdocs-shadcn==0.5.0 bottle==0.13.2 pymdown-extensions==10.14.3 pygments==2.19.1
-
-      - name: Load site cache
-        uses: actions/cache@v6
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+      - run: pip install mkdocs-shadcn==0.5.0 bottle==0.13.2 pymdown-extensions==10.14.3 pygments==2.19.1
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: mkdocs
           path: .cache
-
-      - name: Build site
-        run: cd docs && mkdocs build -d ../site
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
+      - run: cd docs && mkdocs build -d ../site
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
 
-
   publish:
     needs: build
-
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # deploy to GitHub Pages
+      id-token: write # prove the deployment came from this workflow
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

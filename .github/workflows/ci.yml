@@ -1,44 +1,60 @@
-# Runs lint, formatting, tests, and uploads coverage on push/PR. Ensures code quality for both human and agent contributions.
+# Lint once, test on every supported Python, on pull requests and on pushes to
+# main. The four continuous-integration (3.x) jobs are the required checks in
+# the "Protect main" ruleset, so renaming them means editing the ruleset.
 name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
+  # No branch filter: a pull request against another branch (a stacked
+  # change) gets the same checks as one against main.
   pull_request:
-    branches: [ main, master ]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          python-version: "3.13"
+      - run: uv sync --all-extras --locked
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+      # Runs black, ruff, zizmor, actionlint, uv-lock and the file hygiene hooks.
+      - run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
+
   continuous-integration:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-
-    env:
-      UV_PYTHON: ${{ matrix.python-version }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install project dependencies (all extras)
-        run: uv sync --all-extras
-
-      - name: Run pre-commit hooks
-        run: uv run pre-commit run --all-files --show-diff-on-failure
-
-      - name: Lint with Ruff
-        run: uv run ruff check .
-
-      - name: Check formatting with Black
-        run: uv run black --check sluggi tests
-
-      - name: Run tests with coverage
-        run: uv run pytest --cov=sluggi --cov-report=xml --cov-report=term-missing
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --all-extras --locked
+      - run: uv run --no-sync pytest --cov=sluggi --cov-report=xml --cov-report=term-missing
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: ./coverage.xml
           fail_ci_if_error: false

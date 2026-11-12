@@ -21,6 +21,10 @@ The GitHub release notes for a tag are generated from that tag's section by
   `sluggi bench` stay.
 
 ### Changed
+- Every GitHub Action is pinned to a commit hash, every workflow starts from
+  no permissions, and zizmor and actionlint run in pre-commit and in a new
+  CI `lint` job. CI now lints once instead of once per Python version, and
+  runs on pull requests against any branch, not only `main`.
 - README, docs, and package description state measured facts instead of
   adjectives: the benchmark figures replace "blazing-fast", and the Unicode
   support is described as what it is (NFKD normalization, Greek and Cyrillic

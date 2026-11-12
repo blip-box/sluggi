@@ -1,27 +1,27 @@
-# Automatically enables auto-merge for Dependabot PRs. Keeps dependencies up-to-date with zero friction for humans and agents.
+# Enables squash auto-merge on every Dependabot pull request, so an update
+# lands on its own once the required checks on main pass. The ruleset
+# requires no approving review, which is what lets a bot's change merge.
 name: Auto Merge Dependabot PRs
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+    types: [opened, reopened, synchronize]
+
+permissions: {}
 
 jobs:
   automerge:
-    if: |
-      github.actor == 'dependabot[bot]'
+    # The pull request's author, not github.actor: a re-run by a person
+    # changes the actor, and so would a push by someone else.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'blip-box/sluggi'
     runs-on: ubuntu-latest
-    # The repo default workflow token is read-only, so the scopes the
-    # auto-merge API needs must be requested explicitly here.
+    # The default token is read-only; the auto-merge API needs these scopes.
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # merge the pull request once the checks pass
+      pull-requests: write # enable auto-merge on the pull request
     steps:
-      - name: Enable auto-merge for Dependabot PRs
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: squash
-          pull-request-number: ${{ github.event.pull_request.number }}
+      - run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
