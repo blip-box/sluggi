@@ -9,7 +9,7 @@ A job that needs to write asks for exactly that scope in its own
 
 | Workflow | Runs on | What it does |
 |---|---|---|
-| `ci.yml` | pushes to `main`, pull requests | Installs the project with uv on Python 3.10 to 3.13, runs the pre-commit hooks, Ruff and Black, then the tests with coverage, and uploads the coverage report to Codecov. The four `continuous-integration (3.x)` jobs are the required checks on `main`. |
+| `ci.yml` | pushes to `main`, pull requests | `lint` runs the pre-commit hooks once on Python 3.13: Black, Ruff, zizmor, actionlint, `uv lock --check` and file hygiene. `continuous-integration (3.x)` runs the tests with coverage on Python 3.10 to 3.13 and uploads the report to Codecov. The four `continuous-integration (3.x)` jobs are the required checks on `main`. |
 | `commit-lint.yml` | pull requests, pushes to `main` | Checks commit messages against `.commitlintrc.yml` (Conventional Commits). The same check runs locally as a commit-msg hook. |
 | `auto-merge.yml` | pull requests opened by Dependabot | Enables squash auto-merge, so the update lands on its own once the required checks pass. |
 | `label.yml` | pull requests | Applies the labels in `.github/labeler.yml`, by changed paths and branch prefix. |
@@ -24,6 +24,11 @@ version floors in `pyproject.toml`.
 
 ## Rules
 
+- **Actions are pinned to a commit hash**, with the version in a comment
+  (`uses: actions/checkout@3d3c42e5… # v7.0.1`). Dependabot updates the
+  hash and the comment together. zizmor fails the lint job on a tag or
+  branch reference, on a job without a `permissions` block, and on a
+  checkout that keeps its credentials.
 - **No scheduled workflow without a watcher.** A benchmark workflow and a
   mutation-testing workflow ran every Sunday for months and never once
   succeeded: the first pushed a badge that the branch rules reject and that
