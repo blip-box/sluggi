@@ -12,6 +12,7 @@ Example usage:
         --mode single --profile memory
     python scripts/profile.py --profile steps
 """
+
 import argparse
 import random
 import string

@@ -194,7 +194,9 @@ def test_emoji_slugification():
         slugify("🎉🎉 Party time!", process_emoji=True)
         == "party-popper-party-popper-party-time"
     )
-    assert slugify("Go! 🏃‍♂️🏃‍♀️", process_emoji=True) == "go-man-running-woman-running"
+    assert (
+        slugify("Go! 🏃‍♂️🏃‍♀️", process_emoji=True) == "go-man-running-woman-running"
+    )
     # Rare/compound emojis
     assert (
         slugify("family 👨‍👩‍👧‍👦", process_emoji=True)

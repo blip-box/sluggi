@@ -5,6 +5,7 @@ Usage: python scripts/release_notes.py v0.1.2 [CHANGELOG.md]
 The tag may carry a leading "v". Exits with status 1 when the section is
 missing, so a release without a changelog entry fails loudly.
 """
+
 from __future__ import annotations
 
 import re
