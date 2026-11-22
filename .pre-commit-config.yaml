@@ -27,7 +27,7 @@ repos:
         # parse it. Dependabot does not bump this.
         language_version: 24.22.1
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.13.7
+    rev: 0.13.8
     hooks:
       - id: uv-lock
   # Static analysis of the workflows: zizmor for security (unpinned actions,
